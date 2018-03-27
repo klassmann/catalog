@@ -29,6 +29,16 @@ def index():
     categories = session.query(Category).all()
     return render_template('index.html', categories=categories)
 
+@app.route('/category/<int:category_id>/')
+def category_view(category_id):
+    category = session.query(Category).filter_by(id=category_id).one()
+    items = session.query(Item).filter_by(category_id=category.id).all()
+    return render_template('category/view.html', category=category, items=items)
+
+@app.route('/category/new/')
+def category_new():
+    return render_template('category/new.html')
+
 @app.route('/login')
 def login():
     categories = session.query(Category).all()

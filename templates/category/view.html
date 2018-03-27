@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <a class="btn btn-success" href="/category/new/"><i class="fas fa-plus"></i> New Category</a>
+        <a class="btn btn-success" href="/item/new/{{ category.id }}"><i class="fas fa-plus"></i> New Item</a>
     </div>
 </div>
 <div class="row">
@@ -13,14 +13,14 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <h2>Categories</h2>
+        <h2>{{ category.name }} - Items</h2>
         <div class="card-columns">
-        {% for c in categories %}
+        {% for i in items %}
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
-                <h5 class="card-title">{{ c.name }}</h5>
-                <p class="card-text">{{ c.description }}</p>
-                <a href="/category/{{ c.id }}" class="btn btn-primary"><i class="fas fa-list-ul"></i> View</a>
+                <h5 class="card-title">{{ i.name }}</h5>
+                <p class="card-text">{{ i.description }}</p>
+                <a href="#" class="btn btn-primary"><i class="fas fa-list-ul"></i> View</a>
                 <a href="#" class="btn btn-outline-secondary"><i class="fas fa-edit"></i> Edit</a>
                 <a href="#" class="btn btn-outline-danger">Delete</a>
                 </div>

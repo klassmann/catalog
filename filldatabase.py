@@ -38,7 +38,8 @@ if __name__ == '__main__':
     i4 = add_item(session, c2, 'Diablo 3', '')
     i5 = add_item(session, c2, 'Legend Of Zelda', '')
     i6 = add_item(session, c3, 'Super Mario World', '')
-    i7 = add_item(session, c4, 'Resident Evil', '')
+    i7 = add_item(session, c5, 'Resident Evil', '')
+    i8 = add_item(session, c4, 'Myst', '')
     session.commit()
 
 
