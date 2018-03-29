@@ -16,12 +16,12 @@
         <h2>Categories</h2>
         <div class="card-columns">
         {% for c in categories %}
-            <div class="card">
+            <div style="height: 150px;" class="card">
                 <div class="card-body">
                 <h5 class="card-title">{{ c.name }}</h5>
                 <p class="card-text">{{ c.description }}</p>
                 <a href="/category/{{ c.id }}" class="btn btn-primary"><i class="fas fa-list-ul"></i> View</a>
-                <a href="#" class="btn btn-outline-secondary"><i class="fas fa-edit"></i> Edit</a>
+                <a href="/category/{{ c.id }}/edit/" class="btn btn-outline-secondary"><i class="fas fa-edit"></i> Edit</a>
                 <a href="#" class="btn btn-outline-danger">Delete</a>
                 </div>
             </div>

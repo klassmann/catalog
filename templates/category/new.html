@@ -13,7 +13,7 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <form action="/category/new/">
+        <form method='POST' action="{{ url_for('category_new') }}">
             <div class="form-group">
                     <label for="idName">Name</label>
                     <input type="text" class="form-control" name="name" id="idName" placeholder="Enter the name">
@@ -23,7 +23,7 @@
                     <textarea id="idDescription" name="description" class="form-control"></textarea>
                   </div>
                   <button type="submit" class="btn btn-primary">Save</button>
-                  <a href="/" class="btn btn-light">Cancel</a>
+                  <a href="{{ url_for('index') }}" class="btn btn-light">Cancel</a>
             </div>
         </form>
     </div>

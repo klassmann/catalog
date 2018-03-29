@@ -32,6 +32,13 @@
     </div>
 
     <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+              <div class="alert alert-primary">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+        {% endwith %}
         {% block content %}{% endblock %}
         <footer class="pt-4 my-md-5 pt-md-5 border-top">
         <div class="row">
@@ -48,11 +55,9 @@
             </ul>
             </div>
             <div class="col-6 col-md">
-            <h5>Latest Items</h5>
+            <h5>API</h5>
             <ul class="list-unstyled text-small">
-                {% for c in lastest_items %}
-                <li><a class="text-muted" href="#">{{ c.name }}</a></li>
-                {% endfor %}
+                <li><a class="text-muted" href="/catalog.json">Catalog.json</a></li>
             </ul>
             </div>
         </div>

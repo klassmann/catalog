@@ -35,9 +35,32 @@ def category_view(category_id):
     items = session.query(Item).filter_by(category_id=category.id).all()
     return render_template('category/view.html', category=category, items=items)
 
-@app.route('/category/new/')
+@app.route('/category/new/', methods=['GET', 'POST'])
 def category_new():
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        category = Category(name=name, description=description)
+        session.add(category)
+        session.commit()
+        flash('New Category added!')
+        return redirect(url_for('index'))
     return render_template('category/new.html')
+
+@app.route('/category/<int:category_id>/edit/', methods=['GET', 'POST'])
+def category_edit(category_id):
+    category = session.query(Category).filter_by(id=category_id).one()
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        category.name = name
+        category.description = description
+        session.add(category)
+        session.commit()
+        flash('Category {} updated!'.format(category.name))
+        return redirect(url_for('index'))
+    return render_template('category/edit.html', category=category)
+
 
 @app.route('/login')
 def login():
