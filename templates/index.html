@@ -20,9 +20,9 @@
                 <div class="card-body">
                 <h5 class="card-title">{{ c.name }}</h5>
                 <p class="card-text">{{ c.description }}</p>
-                <a href="/category/{{ c.id }}" class="btn btn-primary"><i class="fas fa-list-ul"></i> View</a>
-                <a href="/category/{{ c.id }}/edit/" class="btn btn-outline-secondary"><i class="fas fa-edit"></i> Edit</a>
-                <a href="#" class="btn btn-outline-danger">Delete</a>
+                <a href="{{ url_for('category_view', category_id=c.id) }}" class="btn btn-primary"><i class="fas fa-list-ul"></i> View</a>
+                <a href="{{ url_for('category_edit', category_id=c.id) }}" class="btn btn-outline-secondary"><i class="fas fa-edit"></i> Edit</a>
+                <a href="{{ url_for('category_delete', category_id=c.id) }}" class="btn btn-outline-danger">Delete</a>
                 </div>
             </div>
         {% endfor %}
