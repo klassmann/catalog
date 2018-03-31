@@ -62,6 +62,19 @@ def category_edit(category_id):
     return render_template('category/edit.html', category=category)
 
 
+@app.route('/category/<int:category_id>/item/new/', methods=['GET', 'POST'])
+def item_new(category_id):
+    category = session.query(Category).filter_by(id=category_id).one()
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        item = Item(name=name, description=description, category_id=category.id)
+        session.add(item)
+        session.commit()
+        flash('New Item added in {}!'.format(category.name))
+        return redirect(url_for('category_view', category_id=category.id))
+    return render_template('item/new.html', category=category)
+
 @app.route('/login')
 def login():
     categories = session.query(Category).all()

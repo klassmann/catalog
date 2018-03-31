@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <a class="btn btn-success" href="/item/new/{{ category.id }}"><i class="fas fa-plus"></i> New Item</a>
+        <a class="btn btn-success" href="{{ url_for('item_new', category_id=category.id) }}"><i class="fas fa-plus"></i> New Item</a>
     </div>
 </div>
 <div class="row">
