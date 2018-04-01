@@ -41,19 +41,19 @@
         {% endwith %}
         {% block content %}{% endblock %}
         <footer class="pt-4 my-md-5 pt-md-5 border-top">
-        <div class="row">
-            <div class="col-12 col-md">
-              <a href="https://github.com/klassmann">Lucas Klassmann</a>
-              <small class="d-block mb-3 text-muted">&copy; 2018</small>
-            </div>
-            <div class="col-10 col-md">
-              <h5>API</h5>
-              <ul class="list-unstyled text-small">
-                  <li>GET <a class="text-muted" href="{{ url_for('apiAllCatalogJSON')}}">/catalog.json</a> (All catalog)</li>
-                  {% block api %}{% endblock %}
-              </ul>
-            </div>
-        </div>
+          <div class="row">
+              <div class="col-12 col-md">
+                <a href="https://github.com/klassmann">Lucas Klassmann</a>
+                <small class="d-block mb-3 text-muted">&copy; 2018</small>
+              </div>
+              <div class="col-10 col-md">
+                <h5>API</h5>
+                <ul class="list-unstyled text-small">
+                    <li>GET <a class="text-muted" href="{{ url_for('apiAllCatalogJSON')}}">/catalog.json</a> (All catalog)</li>
+                    {% block api %}{% endblock %}
+                </ul>
+              </div>
+          </div>
         </footer>
     </div>
 
