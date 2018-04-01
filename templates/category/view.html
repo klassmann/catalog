@@ -30,3 +30,7 @@
     </div>
 </div>
 {% endblock %}
+
+{% block api %}
+<li>GET <a class="text-muted" href="{{ url_for('apiCatalogJSON', category_id=category.id) }}">/{{ category.id }}/catalog.json</a> (Only <span class="text-success">{{ category.name }}</span> items)</li>
+{% endblock %}

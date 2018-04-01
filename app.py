@@ -19,9 +19,14 @@ session = DBSession()
 
 # API
 @app.route('/catalog.json')
-def apiCatalogJSON():
+def apiAllCatalogJSON():
     categories = session.query(Category).all()
     return jsonify(Category=[r.serialize for r in categories])
+
+@app.route('/<int:category_id>/catalog.json')
+def apiCatalogJSON(category_id):
+    category = session.query(Category).filter_by(id=category_id).one()
+    return jsonify(Category=category.serialize)
 
 # Front-End
 @app.route('/')
