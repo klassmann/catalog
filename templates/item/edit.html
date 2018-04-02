@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h3>New Item for <span class="text-primary">{{ category.name }}</span></h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <hr>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <form method='POST' action="{{ url_for('item_edit', category_id=category.id, item_id=item.id) }}">
+            <div class="form-group">
+                    <label for="idName">Name</label>
+                    <input type="text" class="form-control" name="name" id="idName" placeholder="Enter the name" value="{{ item.name }}">
+                  </div>
+                  <div class="form-group">
+                    <label for="idDescription">Description</label>
+                    <textarea id="idDescription" name="description" class="form-control">{{ item.description }}</textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Save</button>
+                  <a href="{{ url_for('category_view', category_id=category.id) }}" class="btn btn-light">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

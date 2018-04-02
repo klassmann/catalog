@@ -91,6 +91,23 @@ def item_new(category_id):
         return redirect(url_for('category_view', category_id=category.id))
     return render_template('item/new.html', category=category)
 
+@app.route('/category/<int:category_id>/item/<int:item_id>/edit/', methods=['GET', 'POST'])
+def item_edit(category_id, item_id):
+    category = session.query(Category).filter_by(id=category_id).one()
+    item = session.query(Item).filter_by(id=item_id).one()
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        item.name = name
+        item.description = description
+        session.add(item)
+        session.commit()
+        flash('Item {} updated!'.format(item.name))
+        return redirect(url_for('category_view', category_id=category.id))
+    return render_template('item/edit.html', category=category, item=item)
+
+
+# Auth
 @app.route('/login')
 def login():
     categories = session.query(Category).all()
