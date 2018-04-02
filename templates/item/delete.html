@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h3>Deleting <span class="text-primary">{{ item.name }}</span>. Are you sure?</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <hr>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <form method='POST' action="{{ url_for('item_delete', category_id=category.id, item_id=item.id) }}">
+                  <button type="submit" class="btn btn-danger">Yes, delete it!</button>
+                  <a href="{{ url_for('category_view', category_id=category.id) }}" class="btn btn-light">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

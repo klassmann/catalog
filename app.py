@@ -71,9 +71,10 @@ def category_edit(category_id):
 def category_delete(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
     if request.method == 'POST':
-        flash('Category {} deleted!'.format(category.name))
+        message = 'Category {} deleted!'.format(category.name)
         session.delete(category)
         session.commit()
+        flash(message)
         return redirect(url_for('index'))
     return render_template('category/delete.html', category=category)
 
@@ -106,6 +107,17 @@ def item_edit(category_id, item_id):
         return redirect(url_for('category_view', category_id=category.id))
     return render_template('item/edit.html', category=category, item=item)
 
+@app.route('/category/<int:category_id>/item/<int:item_id>/delete/', methods=['GET', 'POST'])
+def item_delete(category_id, item_id):
+    category = session.query(Category).filter_by(id=category_id).one()
+    item = session.query(Item).filter_by(id=item_id).one()
+    if request.method == 'POST':
+        message = 'Item {} deleted!'.format(item.name)
+        session.delete(item)
+        session.commit()
+        flash(message)
+        return redirect(url_for('category_view', category_id=category.id))
+    return render_template('item/delete.html', category=category, item=item)
 
 # Auth
 @app.route('/login')
