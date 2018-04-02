@@ -7,6 +7,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 
+from flask import url_for
+
 Base = declarative_base()
 
 class Category(Base):
@@ -21,7 +23,8 @@ class Category(Base):
         return {
             'name' : self.name,
             'id' : self.id,
-            'items' : [x.serialize for x in self.items]
+            'items' : [x.serialize for x in self.items],
+            'url': url_for('api_catalog_category', category_id=self.id)
         }
 
 class Item(Base):
