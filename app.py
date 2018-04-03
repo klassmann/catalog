@@ -124,3 +124,6 @@ def item_delete(category_id, item_id):
 def login():
     categories = session.query(Category).all()
     return render_template('login.html', categories=categories)
+
+
+# oauthcallback/google/
