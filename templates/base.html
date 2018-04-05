@@ -1,34 +1,40 @@
 
 <!doctype html>
-<html lang="en">
+<html itemscope itemtype="http://schema.org/Article" lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../../../favicon.ico">
+    <meta name="description" content="Catalog App">
+    <meta name="author" content="Lucas Klassmann">
+    <!-- <link rel="icon" href="../../../../favicon.ico"> -->
 
     <title>Catalog App</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/solid.css" integrity="sha384-29Ax2Ao1SMo9Pz5CxU1KMYy+aRLHmOu6hJKgWiViCYpz3f9egAJNwjnKGgr+BXDN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/fontawesome.css" integrity="sha384-Lyz+8VfV0lv38W729WFAmn77iH5OSroyONnUva4+gYaQTic3iI2fnUKtDSpbVf0J" crossorigin="anonymous">
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
   </head>
 
   <body>
 
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-      <h5 class="my-0 mr-md-auto font-weight-normal">
-          <a href="/">Catalog App</a>
-        </h5>
-      <a class="btn btn-outline-primary" href="/login"><i class="fas fa-sign-in-alt"></i> Log In</a>
-    </div>
-
     <div class="catalog-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
       <h1 class="display-4">Catalog App</h1>
-      <p class="lead">Use this app for organize your catalog of items.</p>
+      <p class="lead">
+        Use this app for organize your catalog of items.
+      </p>
+      {% if session['picture'] %}
+        <img class="img-thumbnail rounded-circle" width="120" src="{{ session['picture'] }}">
+        <p></p>
+        <p class="lead text-muted">
+            Hello, {{ session['username'] }}
+        </p>
+        <button class="btn btn-outline-danger" id="signoutButton">Sign out</button>
+      {% else %}
+        <button class="btn btn-outline-primary" id="signinButton">Sign in with Google</button>
+      {% endif %}
     </div>
 
     <div class="container">
@@ -56,10 +62,52 @@
         </footer>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous"></script>
-    <script src="../../../../assets/js/vendor/popper.min.js"></script>
+    <script src="{{ url_for('static', filename='jquery/jquery-3.3.1.min.js') }}"></script>
+    <!-- <script src="../../../../assets/js/vendor/popper.min.js"></script> -->
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+    <script>
+      function start() {
+        gapi.load('auth2', function() {
+          auth2 = gapi.auth2.init({
+            client_id: '403813662491-pq1ltu37h3cto1n8e5qanj92g6bgv7ho.apps.googleusercontent.com',
+          });
+        });
+      }
+      
+      $('#signoutButton').click(function(){
+          var auth2 = gapi.auth2.getAuthInstance();
+          auth2.signOut().then(function () {
+            window.location.assign('/google/disconnect/');
+          });
+      });
+
+      $('#signinButton').click(function() {
+        auth2.grantOfflineAccess().then(signInCallback);
+      });
+
+      function signInCallback(authResult) {
+        if (authResult['code']) {
+          $('#signinButton').attr('style', 'display: none');
+
+          // Send the code to the server
+          $.ajax({
+            type: 'POST',
+            url: '/oauthcallback/google/?state={{ session["state"] }}',
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            contentType: 'application/octet-stream; charset=utf-8',
+            success: function(result) {
+              window.location.assign('/');
+            },
+            processData: false,
+            data: authResult['code']
+          });
+        } else {
+          // There was an error.
+        }
+      }
+    </script>
   </body>
 </html>
