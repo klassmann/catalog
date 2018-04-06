@@ -11,23 +11,13 @@ from flask import url_for
 
 Base = declarative_base()
 
-class User(Base):
-    __tablename__ = 'user'
-    id = Column(Integer, primary_key = True)
-    name = Column(String(200), nullable = False)
-    email = Column(String(250), nullable = False)
-    picture = Column(String(250), nullable = False)
-    access_token = Column(String(200), nullable = False)
-    gplus_id = Column(String(200), nullable = False)
-
 class Category(Base):
     __tablename__ = 'category'
     id = Column(Integer, primary_key = True)
     name = Column(String(200), nullable = False)
     description = Column(Text())
     items = relationship("Item", back_populates="category")
-    user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship("Item", back_populates="user")
+    gplus_id = Column(String(200), nullable = False)
 
     @property
     def serialize(self):
@@ -45,8 +35,7 @@ class Item(Base):
     description = Column(Text())
     category_id = Column(Integer, ForeignKey('category.id'))
     category = relationship(Category, back_populates="items")
-    user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship("Item", back_populates="user")
+    gplus_id = Column(String(200), nullable = False)
 
     @property
     def serialize(self):

@@ -3,7 +3,9 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
+    {% if has_add_permission %}
         <a class="btn btn-success" href="/category/new/"><i class="fas fa-plus"></i> New Category</a>
+    {% endif %}
     </div>
 </div>
 <div class="row">

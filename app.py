@@ -33,6 +33,21 @@ dbsession = DBSession()
 def get_state_token():
     return ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in range(32))
+def response_success(msg):
+    response = make_response(json.dumps(msg), 200)
+    response.headers['Content-Type'] = 'application/json'
+    return response
+
+def response_error(msg):
+    response = make_response(json.dumps(msg), 401)
+    response.headers['Content-Type'] = 'application/json'
+    return response
+
+def is_loggedin():
+    return 'access_token' in session and 'gplus_id' in session
+
+def get_userid():
+    return session.get('gplus_id')
 
 # API
 @app.route('/api/catalog.json')
@@ -48,25 +63,36 @@ def api_catalog_category(category_id):
 # Front-End
 @app.route('/')
 def index():
+    has_add_permission = is_loggedin()
     session['state'] = get_state_token()
     categories = dbsession.query(Category).all()
-    return render_template('index.html', categories=categories)
+    return render_template('index.html', 
+        categories=categories, 
+        has_add_permission=has_add_permission)
 
 # Category
 @app.route('/category/<int:category_id>/')
 def category_view(category_id):
+    has_add_permission = is_loggedin()
     session['state'] = get_state_token()
     category = dbsession.query(Category).filter_by(id=category_id).one()
     items = dbsession.query(Item).filter_by(category_id=category.id).all()
-    return render_template('category/view.html', category=category, items=items)
+    return render_template('category/view.html', 
+        category=category, 
+        items=items,
+        has_add_permission=has_add_permission)
 
 @app.route('/category/new/', methods=['GET', 'POST'])
 def category_new():
+    if not is_loggedin():
+        flash('You are not logged-in, you do not have authorization for add a new category.')
+        return redirect('/')
+    
     session['state'] = get_state_token()
     if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
-        category = Category(name=name, description=description)
+        category = Category(name=name, description=description, gplus_id=get_userid())
         dbsession.add(category)
         dbsession.commit()
         flash('New Category added!')
@@ -82,6 +108,7 @@ def category_edit(category_id):
         description = request.form['description']
         category.name = name
         category.description = description
+        category.gplus_id = get_userid()
         dbsession.add(category)
         dbsession.commit()
         flash('Category {} updated!'.format(category.name))
@@ -108,7 +135,10 @@ def item_new(category_id):
     if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
-        item = Item(name=name, description=description, category_id=category.id)
+        item = Item(name=name, 
+            description=description, 
+            category_id=category.id, 
+            gplus_id = get_userid())
         dbsession.add(item)
         dbsession.commit()
         flash('New Item added in {}!'.format(category.name))
@@ -125,6 +155,7 @@ def item_edit(category_id, item_id):
         description = request.form['description']
         item.name = name
         item.description = description
+        item.gplus_id = get_userid()
         dbsession.add(item)
         dbsession.commit()
         flash('Item {} updated!'.format(item.name))
@@ -144,22 +175,8 @@ def item_delete(category_id, item_id):
         return redirect(url_for('category_view', category_id=category.id))
     return render_template('item/delete.html', category=category, item=item)
 
-# Auth
-# @app.route('/login')
-# def login():
-#     categories = dbsession.query(Category).all()
-#     return render_template('login.html', categories=categories)
 
-def response_success(msg):
-    response = make_response(json.dumps(msg), 200)
-    response.headers['Content-Type'] = 'application/json'
-    return response
-
-def response_error(msg):
-    response = make_response(json.dumps(msg), 401)
-    response.headers['Content-Type'] = 'application/json'
-    return response
-
+# Authentication and Authorization
 @app.route('/oauthcallback/google/', methods=['POST'])
 def gconnect():
     if request.args.get('state') != session.get('state'):
@@ -235,5 +252,6 @@ def gdisconnect():
         del session['gplus_id']
         flash('User disconnected')
         return redirect('/')
+
         flash('Failed to revoke token for given user')
     return redirect('/')
