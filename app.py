@@ -101,8 +101,18 @@ def category_new():
 
 @app.route('/category/<int:category_id>/edit/', methods=['GET', 'POST'])
 def category_edit(category_id):
-    session['state'] = get_state_token()
     category = dbsession.query(Category).filter_by(id=category_id).one()
+
+    if not is_loggedin():
+        flash('You are not logged-in, you do not have authorization for update the category.')
+        return redirect('/')
+
+    if category.gplus_id != session.get('gplus_id'):
+        flash('You do not have authorization for update this category.')
+        return redirect('/')
+
+    session['state'] = get_state_token()
+    
     if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
@@ -117,8 +127,18 @@ def category_edit(category_id):
 
 @app.route('/category/<int:category_id>/delete/', methods=['GET', 'POST'])
 def category_delete(category_id):
-    session['state'] = get_state_token()
     category = dbsession.query(Category).filter_by(id=category_id).one()
+    
+    if not is_loggedin():
+        flash('You are not logged-in, you do not have authorization for delete the category.')
+        return redirect('/')
+
+    if category.gplus_id != session.get('gplus_id'):
+        flash('You do not have authorization for delete this category.')
+        return redirect('/')
+
+    session['state'] = get_state_token()
+    
     if request.method == 'POST':
         message = 'Category {} deleted!'.format(category.name)
         dbsession.delete(category)
@@ -130,6 +150,11 @@ def category_delete(category_id):
 # Item
 @app.route('/category/<int:category_id>/item/new/', methods=['GET', 'POST'])
 def item_new(category_id):
+
+    if not is_loggedin():
+        flash('You are not logged-in, you do not have authorization for add a new item.')
+        return redirect('/')
+
     session['state'] = get_state_token()
     category = dbsession.query(Category).filter_by(id=category_id).one()
     if request.method == 'POST':
@@ -147,9 +172,19 @@ def item_new(category_id):
 
 @app.route('/category/<int:category_id>/item/<int:item_id>/edit/', methods=['GET', 'POST'])
 def item_edit(category_id, item_id):
-    session['state'] = get_state_token()
     category = dbsession.query(Category).filter_by(id=category_id).one()
     item = dbsession.query(Item).filter_by(id=item_id).one()
+
+    if not is_loggedin():
+        flash('You are not logged-in, you do not have authorization for update the item.')
+        return redirect('/')
+
+    if item.gplus_id != session.get('gplus_id'):
+        flash('You do not have authorization for update this item.')
+        return redirect('/')
+
+    session['state'] = get_state_token()
+
     if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
@@ -164,9 +199,19 @@ def item_edit(category_id, item_id):
 
 @app.route('/category/<int:category_id>/item/<int:item_id>/delete/', methods=['GET', 'POST'])
 def item_delete(category_id, item_id):
-    session['state'] = get_state_token()
     category = dbsession.query(Category).filter_by(id=category_id).one()
     item = dbsession.query(Item).filter_by(id=item_id).one()
+
+    if not is_loggedin():
+        flash('You are not logged-in, you do not have authorization for delete the item.')
+        return redirect('/')
+
+    if item.gplus_id != session.get('gplus_id'):
+        flash('You do not have authorization for delete this item.')
+        return redirect('/')
+
+    session['state'] = get_state_token()
+
     if request.method == 'POST':
         message = 'Item {} deleted!'.format(item.name)
         dbsession.delete(item)
