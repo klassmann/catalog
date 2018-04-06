@@ -101,19 +101,22 @@ def category_view(category_id):
     )
 
 
-
 @app.route('/category/new/', methods=['GET', 'POST'])
 def category_new():
     if not is_loggedin():
         flash(MSG_NOT_AUTHORIZED.format('add a new category'))
         return redirect('/')
-    
+
     session['state'] = get_state_token()
 
     if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
-        category = Category(name=name, description=description, gplus_id=get_userid())
+        category = Category(
+            name=name,
+            description=description,
+            gplus_id=get_userid()
+        )
         dbsession.add(category)
         dbsession.commit()
         flash('New Category added!')
@@ -134,7 +137,7 @@ def category_edit(category_id):
         return redirect('/')
 
     session['state'] = get_state_token()
-    
+
     if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
@@ -151,7 +154,7 @@ def category_edit(category_id):
 @app.route('/category/<int:category_id>/delete/', methods=['GET', 'POST'])
 def category_delete(category_id):
     category = dbsession.query(Category).filter_by(id=category_id).one()
-    
+
     if not is_loggedin():
         flash(MSG_NOT_AUTHORIZED.format('delete the category'))
         return redirect('/')
@@ -161,7 +164,7 @@ def category_delete(category_id):
         return redirect('/')
 
     session['state'] = get_state_token()
-    
+
     if request.method == 'POST':
         message = 'Category {} deleted!'.format(category.name)
         dbsession.delete(category)
@@ -184,10 +187,12 @@ def item_new(category_id):
     if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
-        item = Item(name=name, 
-            description=description, 
-            category_id=category.id, 
-            gplus_id = get_userid())
+        item = Item(
+            name=name,
+            description=description,
+            category_id=category.id,
+            gplus_id=get_userid()
+        )
         dbsession.add(item)
         dbsession.commit()
         flash('New Item added in {}!'.format(category.name))
@@ -195,7 +200,10 @@ def item_new(category_id):
     return render_template('item/new.html', category=category)
 
 
-@app.route('/category/<int:category_id>/item/<int:item_id>/edit/', methods=['GET', 'POST'])
+@app.route(
+    '/category/<int:category_id>/item/<int:item_id>/edit/',
+    methods=['GET', 'POST']
+)
 def item_edit(category_id, item_id):
     category = dbsession.query(Category).filter_by(id=category_id).one()
     item = dbsession.query(Item).filter_by(id=item_id).one()
@@ -223,7 +231,10 @@ def item_edit(category_id, item_id):
     return render_template('item/edit.html', category=category, item=item)
 
 
-@app.route('/category/<int:category_id>/item/<int:item_id>/delete/', methods=['GET', 'POST'])
+@app.route(
+    '/category/<int:category_id>/item/<int:item_id>/delete/',
+    methods=['GET', 'POST']
+)
 def item_delete(category_id, item_id):
     category = dbsession.query(Category).filter_by(id=category_id).one()
     item = dbsession.query(Item).filter_by(id=item_id).one()
@@ -257,7 +268,10 @@ def gconnect():
 
     try:
         # Upgrade the authorization code into a credentials object
-        oauth_flow = flow_from_clientsecrets('client_secret_google.json', scope='')
+        oauth_flow = flow_from_clientsecrets(
+            'client_secret_google.json',
+            scope=''
+        )
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
@@ -312,7 +326,7 @@ def gdisconnect():
     if not access_token:
         return response_error('User is not connected.')
 
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % session['access_token']
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
 
