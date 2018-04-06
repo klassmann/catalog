@@ -14,7 +14,7 @@
 <div class="row">
     <div class="col-md-12">
         <form method='POST' action="{{ url_for('category_edit', category_id=category.id) }}">
-            <div class="form-group">
+                  <div class="form-group">
                     <label for="idName">Name</label>
                     <input type="text" class="form-control" name="name" id="idName" value="{{ category.name }}" placeholder="Enter the name">
                   </div>
@@ -24,7 +24,6 @@
                   </div>
                   <button type="submit" class="btn btn-primary">Save</button>
                   <a href="{{ url_for('index') }}" class="btn btn-light">Cancel</a>
-            </div>
         </form>
     </div>
 </div>
