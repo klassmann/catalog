@@ -182,6 +182,7 @@ def item_view(category_id, item_id):
     item = dbsession.query(Item).filter_by(id=item_id).one()
     return render_template('item/view.html', category=category, item=item)
 
+
 @app.route('/category/<int:category_id>/item/new/', methods=['GET', 'POST'])
 def item_new(category_id):
 
