@@ -23,7 +23,7 @@
                 <div class="card-body">
                 <h5 class="card-title">{{ i.name }}</h5>
                 <p class="card-text">{{ i.description }}</p>
-                <a href="#" class="btn btn-primary"><i class="fas fa-list-ul"></i> View</a>
+                <a href="{{ url_for('item_view', category_id=category.id, item_id=i.id) }}" class="btn btn-primary"><i class="fas fa-list-ul"></i> View</a>
                 {% if i.gplus_id == session['gplus_id'] %}
                     <a href="{{ url_for('item_edit', category_id=category.id, item_id=i.id) }}" class="btn btn-outline-secondary"><i class="fas fa-edit"></i> Edit</a>
                 {% endif %}

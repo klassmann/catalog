@@ -175,6 +175,13 @@ def category_delete(category_id):
 
 
 # Item
+
+@app.route('/category/<int:category_id>/item/<int:item_id>/')
+def item_view(category_id, item_id):
+    category = dbsession.query(Category).filter_by(id=category_id).one()
+    item = dbsession.query(Item).filter_by(id=item_id).one()
+    return render_template('item/view.html', category=category, item=item)
+
 @app.route('/category/<int:category_id>/item/new/', methods=['GET', 'POST'])
 def item_new(category_id):
 

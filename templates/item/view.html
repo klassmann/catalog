@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <a class="btn btn-success" href="{{ url_for('item_new', category_id=category.id) }}"><i class="fas fa-plus"></i> New Item</a>
+        <a class="btn btn-light" href="{{ url_for('category_view', category_id=category.id) }}"><i class="fas fa-home"></i> {{ category.name }}</a>
     </div>
 </div>
 <div class="row">
@@ -13,7 +13,7 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <h2>{{ item.name }}/h2>
+        <h2>{{ item.name }}</h2>
         <p>{{ item.description }}</p>
     </div>
 </div>
