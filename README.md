@@ -78,7 +78,7 @@ python3 database.py
 
 
 ## Use the following URL for open the application
-[http://locahost:5000](http://locahost:5000)
+[http://localhost:5000](http://localhost:5000)
 
 
 <a name="common-issues"></a>
@@ -86,7 +86,7 @@ python3 database.py
 - If you are not using **Vagrant**, make sure of installing all the *requirements* in your environment.
 - The database `database.py` need to be initialized before running the application `app.py`.
 - The database is empty, so, you need to fill up it with your data.
-- You have to open the address [http://locahost:5000](http://locahost:5000) in your browser because this is the only URL that Google Sign-In is authorized for run.
+- You have to open the address [http://localhost:5000](http://localhost:5000) in your browser because this is the only URL that Google Sign-In is authorized for run.
 
 
 <a name="license"></a>
