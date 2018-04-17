@@ -100,5 +100,6 @@ ENV/
 # mypy
 .mypy_cache/
 .vagrant
-client_secret_google.json
+# client_secret_google.json
 client_secret.json
+catalog.db
