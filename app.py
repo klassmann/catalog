@@ -66,6 +66,18 @@ def is_loggedin():
 def get_userid():
     return session.get('gplus_id')
 
+# Cross-Site Request Forgery Token
+def update_csrf_token():
+    new_csrf_token = get_state_token()
+    session['csrf_token'] = new_csrf_token
+    return new_csrf_token
+
+# Cross-Site Request Forgery Verification
+def correct_csrf():
+    if request.form.get('csrf_token') != session.get('csrf_token'):
+        flash('Invalid form data.')
+        return False
+    return True
 
 # API
 @app.route('/api/catalog.json')
@@ -84,7 +96,6 @@ def api_catalog_category(category_id):
 @app.route('/')
 def index():
     has_add_permission = is_loggedin()
-    session['state'] = get_state_token()
     categories = dbsession.query(Category).all()
     return render_template(
         'index.html',
@@ -97,7 +108,6 @@ def index():
 @app.route('/category/<int:category_id>/')
 def category_view(category_id):
     has_add_permission = is_loggedin()
-    session['state'] = get_state_token()
     category = dbsession.query(Category).filter_by(id=category_id).one()
     items = dbsession.query(Item).filter_by(category_id=category.id).all()
     return render_template(
@@ -114,9 +124,11 @@ def category_new():
         flash(MSG_NOT_AUTHORIZED.format('add a new category'))
         return redirect('/')
 
-    session['state'] = get_state_token()
-
     if request.method == 'POST':
+        # Checking the CSRF token
+        if not correct_csrf():
+            return redirect(url_for('category_new'))
+
         name = request.form['name']
         description = request.form['description']
         category = Category(
@@ -128,7 +140,10 @@ def category_new():
         dbsession.commit()
         flash('New Category added!')
         return redirect(url_for('index'))
-    return render_template('category/new.html')
+    
+    # New CSRF token
+    csrf_token = update_csrf_token()
+    return render_template('category/new.html', csrf_token=csrf_token)
 
 
 @app.route('/category/<int:category_id>/edit/', methods=['GET', 'POST'])
@@ -143,19 +158,30 @@ def category_edit(category_id):
         flash('You do not have authorization for update this category.')
         return redirect('/')
 
-    session['state'] = get_state_token()
-
     if request.method == 'POST':
+
+        if not correct_csrf():
+            return redirect(url_for('category_edit', category_id=category_id))
+
         name = request.form['name']
         description = request.form['description']
+
         category.name = name
         category.description = description
         category.gplus_id = get_userid()
+
         dbsession.add(category)
         dbsession.commit()
+
         flash('Category {} updated!'.format(category.name))
         return redirect(url_for('index'))
-    return render_template('category/edit.html', category=category)
+    
+    csrf_token = update_csrf_token()
+    return render_template(
+        'category/edit.html',
+        category=category,
+        csrf_token=csrf_token
+    )
 
 
 @app.route('/category/<int:category_id>/delete/', methods=['GET', 'POST'])
@@ -170,15 +196,23 @@ def category_delete(category_id):
         flash(MSG_NOT_AUTHORIZED.format('delete this category'))
         return redirect('/')
 
-    session['state'] = get_state_token()
-
     if request.method == 'POST':
+
+        if not correct_csrf():
+            return redirect(url_for('category_delete', category_id=category_id))
+
         message = 'Category {} deleted!'.format(category.name)
         dbsession.delete(category)
         dbsession.commit()
         flash(message)
         return redirect(url_for('index'))
-    return render_template('category/delete.html', category=category)
+    
+    csrf_token = update_csrf_token()
+    return render_template(
+        'category/delete.html',
+        category=category,
+        csrf_token=csrf_token
+    )
 
 
 # Item
