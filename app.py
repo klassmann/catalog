@@ -231,9 +231,12 @@ def item_new(category_id):
         flash(MSG_NOT_AUTHORIZED.format('add a new item'))
         return redirect('/')
 
-    session['state'] = get_state_token()
     category = dbsession.query(Category).filter_by(id=category_id).one()
     if request.method == 'POST':
+
+        if not correct_csrf():
+            return redirect(url_for('item_new', category_id=category_id))
+
         name = request.form['name']
         description = request.form['description']
         item = Item(
@@ -246,7 +249,13 @@ def item_new(category_id):
         dbsession.commit()
         flash('New Item added in {}!'.format(category.name))
         return redirect(url_for('category_view', category_id=category.id))
-    return render_template('item/new.html', category=category)
+    
+    csrf_token = update_csrf_token()
+    return render_template(
+        'item/new.html',
+        category=category,
+        csrf_token=csrf_token
+    )
 
 
 @app.route(
@@ -268,6 +277,15 @@ def item_edit(category_id, item_id):
     session['state'] = get_state_token()
 
     if request.method == 'POST':
+
+        if not correct_csrf():
+            url = url_for(
+                'item_edit',
+                category_id=category_id,
+                item_id=item_id
+            )
+            return redirect(url)
+
         name = request.form['name']
         description = request.form['description']
         item.name = name
@@ -277,7 +295,14 @@ def item_edit(category_id, item_id):
         dbsession.commit()
         flash('Item {} updated!'.format(item.name))
         return redirect(url_for('category_view', category_id=category.id))
-    return render_template('item/edit.html', category=category, item=item)
+
+    csrf_token = update_csrf_token()
+    return render_template(
+        'item/edit.html',
+        category=category,
+        item=item,
+        csrf_token=csrf_token
+    )
 
 
 @app.route(
@@ -299,12 +324,28 @@ def item_delete(category_id, item_id):
     session['state'] = get_state_token()
 
     if request.method == 'POST':
+
+        if not correct_csrf():
+            url = url_for(
+                'item_delete',
+                category_id=category_id,
+                item_id=item_id
+            )
+            return redirect(url)
+
         message = 'Item {} deleted!'.format(item.name)
         dbsession.delete(item)
         dbsession.commit()
         flash(message)
         return redirect(url_for('category_view', category_id=category.id))
-    return render_template('item/delete.html', category=category, item=item)
+
+    csrf_token = update_csrf_token()
+    return render_template(
+        'item/delete.html',
+        category=category,
+        item=item,
+        csrf_token=csrf_token
+    )
 
 
 # Authentication and Authorization
