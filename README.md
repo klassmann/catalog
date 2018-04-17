@@ -5,11 +5,12 @@
 - [About this project](#about)
 - [Using with Vagrant](#using-vagrant)
 - [Using with local environment](#using-local)
+- [Important Notes and Common Issues](#common-issues)
 - [License](#license)
 
 
 ## About this project
-This project was made for Udacity Full-Stack Web Developer nanodegree. The goal is provide a catalog application in Flask with CRUD, Authentication and Authorization with Google, and a basic API endpoint for get the entire catalog of items.
+This project was made for Udacity Full-Stack Web Developer nanodegree. The goal is to provide a catalog application in Flask with CRUD, Authentication, and Authorization with Google, and a basic API endpoint to get the entire catalog of items.
 
 <a name="using-vagrant"></a>
 ## Using with Vagrant
@@ -23,10 +24,10 @@ Inside the project folder, use this command for setup the `vagrant` environment:
 ```bash
 vagrant up
 ```
-This command setup the vagrant and all the requirements for the project, when you log in Vagrant you have the correct Python version and all the `requirements.txt` installed.
+This command setups the vagrant and all the requirements for the project, when you log in Vagrant, you will have the correct Python version and all the `requirements.txt` installed.
 
-### Enter in Vagrant machine
-After setuping Vagrant machine, you can log in via SSH:
+### Enter in Vagrant environment
+After setup Vagrant environment, you can log in via SSH:
 ```bash
 vagrant ssh
 ```
@@ -68,11 +69,12 @@ python3 database.py
 ./run
 ```
 
+<a name="common-issues"></a>
 ## Important Notes and Common Issues
-- You are not using **Vagrant**, make sure of installing all the *requirements* in your environment.
-- The database is empty, so, you need to fill up it with your own data.
-- The database (database.py) need to be initialized before running the application (app.py).
-- You need to open the address http://locahost:5000 in your browser, because this is the only URL that Google Sign-In is authorized for.
+- If you are not using **Vagrant**, make sure of installing all the *requirements* in your environment.
+- The database `database.py` need to be initialized before running the application `app.py`.
+- The database is empty, so, you need to fill up it with your data.
+- You have to open the address `http://locahost:5000` in your browser because this is the only URL that Google Sign-In is authorized for run.
 
 
 <a name="license"></a>
