@@ -17,8 +17,8 @@ This project was made for Udacity Full-Stack Web Developer nanodegree. The goal 
 ## Using with Vagrant
 
 ### Requirements
-- Vagrant
-- VirtualBox
+- [Vagrant](https://www.vagrantup.com/) (Tested with Vagrant 2.0.2)
+- [VirtualBox](https://www.virtualbox.org/wiki/Downloads) (Tested with VirtualBox 5.2.4)
 
 ### Setup Vagrant environment
 Inside the project folder, use this command for setup the `vagrant` environment:
@@ -52,7 +52,7 @@ python database.py
 ## Using with local environment
 
 ### Requirements
-- Python 3
+- [Python 3](https://www.python.org/downloads/)
 
 ### Start installing the `requirements.txt`
 
