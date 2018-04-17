@@ -66,11 +66,13 @@ def is_loggedin():
 def get_userid():
     return session.get('gplus_id')
 
+
 # Cross-Site Request Forgery Token
 def update_csrf_token():
     new_csrf_token = get_state_token()
     session['csrf_token'] = new_csrf_token
     return new_csrf_token
+
 
 # Cross-Site Request Forgery Verification
 def correct_csrf():
@@ -78,6 +80,7 @@ def correct_csrf():
         flash('Invalid form data.')
         return False
     return True
+
 
 # API
 @app.route('/api/catalog.json')
@@ -140,7 +143,7 @@ def category_new():
         dbsession.commit()
         flash('New Category added!')
         return redirect(url_for('index'))
-    
+
     # New CSRF token
     csrf_token = update_csrf_token()
     return render_template('category/new.html', csrf_token=csrf_token)
@@ -175,7 +178,7 @@ def category_edit(category_id):
 
         flash('Category {} updated!'.format(category.name))
         return redirect(url_for('index'))
-    
+
     csrf_token = update_csrf_token()
     return render_template(
         'category/edit.html',
@@ -199,14 +202,15 @@ def category_delete(category_id):
     if request.method == 'POST':
 
         if not correct_csrf():
-            return redirect(url_for('category_delete', category_id=category_id))
+            url = url_for('category_delete', category_id=category_id)
+            return redirect(url)
 
         message = 'Category {} deleted!'.format(category.name)
         dbsession.delete(category)
         dbsession.commit()
         flash(message)
         return redirect(url_for('index'))
-    
+
     csrf_token = update_csrf_token()
     return render_template(
         'category/delete.html',
@@ -249,7 +253,7 @@ def item_new(category_id):
         dbsession.commit()
         flash('New Item added in {}!'.format(category.name))
         return redirect(url_for('category_view', category_id=category.id))
-    
+
     csrf_token = update_csrf_token()
     return render_template(
         'item/new.html',
