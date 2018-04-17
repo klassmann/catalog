@@ -18,24 +18,30 @@ This project was made for Udacity Full-Stack Web Developer nanodegree. The goal 
 - Vagrant
 - VirtualBox
 
-### Setup Vagrant
+### Setup Vagrant environment
 Inside the project folder, use this command for setup the `vagrant` environment:
 ```bash
 vagrant up
 ```
-This command setup the vagrant and all the requirements for the project.
+This command setup the vagrant and all the requirements for the project, when you log in Vagrant you have the correct Python version and all the `requirements.txt` installed.
 
-After the installing and the setup of the vagrant you need to enter in the vagrant environment:
+### Enter in Vagrant machine
+After setuping Vagrant machine, you can log in via SSH:
 ```bash
 vagrant ssh
 ```
 
-Syncronize the database
+### Change for the correct directory
 ```bash
-python3 database.py
+cd /vagrant
 ```
 
-And now you can run the application:
+### Create the database
+```bash
+python database.py
+```
+
+### Run the application
 ```bash
 ./run
 ```
@@ -52,7 +58,7 @@ And now you can run the application:
 pip3 install -r requirements.txt
 ```
 
-### Syncronize the database
+### Create the database
 ```bash
 python3 database.py
 ```
@@ -62,10 +68,11 @@ python3 database.py
 ./run
 ```
 
-## Important Notes - Common Issues
-- You need to run this under the http://locahost:5000, because this is the only URL that Google Sign-In is authorized for.
-- The database (database.py) need to be initialized before running the application (app.py).
+## Important Notes and Common Issues
+- You are not using **Vagrant**, make sure of installing all the *requirements* in your environment.
 - The database is empty, so, you need to fill up it with your own data.
+- The database (database.py) need to be initialized before running the application (app.py).
+- You need to open the address http://locahost:5000 in your browser, because this is the only URL that Google Sign-In is authorized for.
 
 
 <a name="license"></a>
