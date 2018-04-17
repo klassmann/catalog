@@ -40,14 +40,21 @@ def get_state_token():
     )
 
 
+# This function guarantee that b is a str
+def bytes_to_str(b):
+    if type(b) == bytes:
+        return b.decode()
+    return b
+
+
 def response_success(msg):
-    response = make_response(json.dumps(msg), 200)
+    response = make_response(json.dumps(bytes_to_str(msg)), 200)
     response.headers['Content-Type'] = 'application/json'
     return response
 
 
 def response_error(msg):
-    response = make_response(json.dumps(msg), 401)
+    response = make_response(json.dumps(bytes_to_str(msg)), 401)
     response.headers['Content-Type'] = 'application/json'
     return response
 
@@ -290,7 +297,7 @@ def gconnect():
     url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
            % access_token)
     h = httplib2.Http()
-    result = json.loads(h.request(url, 'GET')[1])
+    result = json.loads(bytes_to_str(h.request(url, 'GET')[1]))
     # If there was an error in the access token info, abort.
     if result.get('error') is not None:
         return response_error(result.get('error'))
@@ -332,13 +339,18 @@ def gdisconnect():
     access_token = session.get('access_token')
 
     if not access_token:
-        return response_error('User is not connected.')
+        msg = 'User is not connected.'
+        return response_error(msg)
 
+    # Revoke the access from Google
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
 
-    if result['status'] == '200':
+    # I am not expecting only a successful result, because sometimes
+    # the browser is not logged and the session in backend still
+    # logged in. I am cleaning always the session.
+    if result['status'] == '200' or result['status'] == '400':
         del session['username']
         del session['picture']
         del session['email']
