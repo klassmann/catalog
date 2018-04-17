@@ -13,6 +13,12 @@
 ## About this project
 This project was made for Udacity Full-Stack Web Developer nanodegree. The goal is to provide a catalog application in Flask with CRUD, Authentication, and Authorization with Google, and a basic API endpoint to get the entire catalog of items.
 
+## Features
+- [x] Categories - CRUD
+- [x] Item - CRUD
+- [x] Google Authentication and Authorization
+- [x] CSRF
+
 <a name="using-vagrant"></a>
 ## Using with Vagrant
 
@@ -69,6 +75,11 @@ python3 database.py
 ```bash
 ./run
 ```
+
+
+## Use the following URL for open the application
+[http://locahost:5000](http://locahost:5000)
+
 
 <a name="common-issues"></a>
 ## Important Notes and Common Issues
