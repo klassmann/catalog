@@ -3,8 +3,8 @@
 ## Table of Contents
 
 - [About this project](#about)
-- [Using with Vagrant](#using-vagrant)
-- [Using with local environment](#using-local)
+- [Using Vagrant](#using-vagrant)
+- [Using local environment](#using-local)
 - [Important Notes and Common Issues](#common-issues)
 - [License](#license)
 
@@ -19,8 +19,15 @@ This project was made for Udacity Full-Stack Web Developer nanodegree. The goal 
 - [x] Google Authentication and Authorization
 - [x] CSRF
 
+## Getting Started
+Start cloning this repository:
+```bash
+git clone https://github.com/klassmann/udacity-catalog.git
+```
+And choose between **Vagrant** or **Local Environment**.
+
 <a name="using-vagrant"></a>
-## Using with Vagrant
+## Using Vagrant
 
 ### Requirements
 - [Vagrant](https://www.vagrantup.com/) (Tested with Vagrant 2.0.2)
@@ -55,7 +62,7 @@ python database.py
 ```
 
 <a name="using-local"></a>
-## Using with local environment
+## Using local environment
 
 ### Requirements
 - [Python 3](https://www.python.org/downloads/)
