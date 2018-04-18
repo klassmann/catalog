@@ -100,6 +100,10 @@ def api_catalog_category(category_id):
 def index():
     has_add_permission = is_loggedin()
     categories = dbsession.query(Category).all()
+
+    # Google Auth
+    session['state'] = get_state_token()
+
     return render_template(
         'index.html',
         categories=categories,
@@ -113,6 +117,10 @@ def category_view(category_id):
     has_add_permission = is_loggedin()
     category = dbsession.query(Category).filter_by(id=category_id).one()
     items = dbsession.query(Item).filter_by(category_id=category.id).all()
+
+    # Google Auth
+    session['state'] = get_state_token()
+
     return render_template(
         'category/view.html',
         category=category,
@@ -146,6 +154,10 @@ def category_new():
 
     # New CSRF token
     csrf_token = update_csrf_token()
+
+    # Google Auth
+    session['state'] = get_state_token()
+
     return render_template('category/new.html', csrf_token=csrf_token)
 
 
@@ -180,6 +192,10 @@ def category_edit(category_id):
         return redirect(url_for('index'))
 
     csrf_token = update_csrf_token()
+
+    # Google Auth
+    session['state'] = get_state_token()
+
     return render_template(
         'category/edit.html',
         category=category,
@@ -212,6 +228,10 @@ def category_delete(category_id):
         return redirect(url_for('index'))
 
     csrf_token = update_csrf_token()
+
+    # Google Auth
+    session['state'] = get_state_token()
+
     return render_template(
         'category/delete.html',
         category=category,
@@ -225,6 +245,10 @@ def category_delete(category_id):
 def item_view(category_id, item_id):
     category = dbsession.query(Category).filter_by(id=category_id).one()
     item = dbsession.query(Item).filter_by(id=item_id).one()
+
+    # Google Auth
+    session['state'] = get_state_token()
+
     return render_template('item/view.html', category=category, item=item)
 
 
@@ -255,6 +279,10 @@ def item_new(category_id):
         return redirect(url_for('category_view', category_id=category.id))
 
     csrf_token = update_csrf_token()
+
+    # Google Auth
+    session['state'] = get_state_token()
+
     return render_template(
         'item/new.html',
         category=category,
@@ -301,6 +329,10 @@ def item_edit(category_id, item_id):
         return redirect(url_for('category_view', category_id=category.id))
 
     csrf_token = update_csrf_token()
+
+    # Google Auth
+    session['state'] = get_state_token()
+
     return render_template(
         'item/edit.html',
         category=category,
@@ -344,6 +376,10 @@ def item_delete(category_id, item_id):
         return redirect(url_for('category_view', category_id=category.id))
 
     csrf_token = update_csrf_token()
+
+    # Google Auth
+    session['state'] = get_state_token()
+
     return render_template(
         'item/delete.html',
         category=category,
