@@ -8,7 +8,7 @@
 - [Important Notes and Common Issues](#common-issues)
 - [License](#license)
 
-NOTE: For security reasons the original **client_secret_google.json** was removed after my project was approved on Udacity.
+NOTE: For security reasons the original **client_secret_google.json** was removed after my project was approved on Udacity. It will remain in commit history, but the secret has expired in the Google API Console.
 
 <a name="about"></a>
 ## About this project
