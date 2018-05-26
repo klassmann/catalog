@@ -14,6 +14,8 @@ NOTE: For security reasons the original **client_secret_google.json** was remove
 ## About this project
 This project was made for Udacity Full-Stack Web Developer nanodegree. The goal is to provide a catalog application in Flask with CRUD, Authentication, and Authorization with Google, and a basic API endpoint to get the entire catalog of items.
 
+![Screenshot](screenshot.png)
+
 ## Features
 - [x] Categories - CRUD
 - [x] Item - CRUD
