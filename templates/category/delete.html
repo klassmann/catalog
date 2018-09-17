@@ -6,11 +6,7 @@
         <h3>Deleting <span class="text-primary">{{ category.name }}</span>. Are you sure?</h3>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-12">
-        <hr>
-    </div>
-</div>
+<div class="row"><div class="col-md-12"><hr></div></div>
 <div class="row">
     <div class="col-md-12">
         <form method='POST' action="{{ url_for('category_delete', category_id=category.id) }}">
