@@ -4,6 +4,7 @@ import random
 import string
 import httplib2
 import json
+import os
 
 from flask import Flask
 from flask import render_template, request, redirect, url_for, flash
@@ -13,6 +14,7 @@ from flask import make_response
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
@@ -20,14 +22,19 @@ from oauth2client.client import FlowExchangeError
 import settings
 from database import Category, Base, Item
 
-CLIENT_ID = json.loads(
-    open('client_secret_google.json', 'r').read())['web']['client_id']
+USING_AUTH = False
+ANONYMOUS_USER = 'anonymous-user'
+
+if os.path.exists(settings.CLIENT_GOOGLE_SECRET):
+    CLIENT_ID = json.loads(
+        open(settings.CLIENT_GOOGLE_SECRET, 'r').read())['web']['client_id']
+    USING_AUTH = True
 
 MSG_NOT_AUTHORIZED = 'You do not have authorization for {}.'
 
 app = Flask(__name__)
 app.secret_key = settings.SECRET
-engine = create_engine(settings.DATABASE)
+engine = create_engine(settings.DATABASE, poolclass=StaticPool, connect_args={'check_same_thread':False})
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 dbsession = DBSession()
@@ -64,7 +71,7 @@ def is_loggedin():
 
 
 def get_userid():
-    return session.get('gplus_id')
+    return session.get('gplus_id', ANONYMOUS_USER)
 
 
 # Cross-Site Request Forgery Token
@@ -98,7 +105,7 @@ def api_catalog_category(category_id):
 # Front-End
 @app.route('/')
 def index():
-    has_add_permission = is_loggedin()
+    has_add_permission = is_loggedin() or not USING_AUTH
     categories = dbsession.query(Category).all()
 
     # Google Auth
@@ -114,7 +121,7 @@ def index():
 # Category
 @app.route('/category/<int:category_id>/')
 def category_view(category_id):
-    has_add_permission = is_loggedin()
+    has_add_permission = is_loggedin() or not USING_AUTH
     category = dbsession.query(Category).filter_by(id=category_id).one()
     items = dbsession.query(Item).filter_by(category_id=category.id).all()
 
@@ -131,7 +138,7 @@ def category_view(category_id):
 
 @app.route('/category/new/', methods=['GET', 'POST'])
 def category_new():
-    if not is_loggedin():
+    if not is_loggedin() and USING_AUTH:
         flash(MSG_NOT_AUTHORIZED.format('add a new category'))
         return redirect('/')
 
@@ -207,11 +214,11 @@ def category_edit(category_id):
 def category_delete(category_id):
     category = dbsession.query(Category).filter_by(id=category_id).one()
 
-    if not is_loggedin():
+    if not is_loggedin() and USING_AUTH:
         flash(MSG_NOT_AUTHORIZED.format('delete the category'))
         return redirect('/')
 
-    if category.gplus_id != session.get('gplus_id'):
+    if category.gplus_id != session.get('gplus_id') and USING_AUTH:
         flash(MSG_NOT_AUTHORIZED.format('delete this category'))
         return redirect('/')
 
@@ -255,7 +262,7 @@ def item_view(category_id, item_id):
 @app.route('/category/<int:category_id>/item/new/', methods=['GET', 'POST'])
 def item_new(category_id):
 
-    if not is_loggedin():
+    if not is_loggedin() and USING_AUTH:
         flash(MSG_NOT_AUTHORIZED.format('add a new item'))
         return redirect('/')
 
@@ -298,7 +305,7 @@ def item_edit(category_id, item_id):
     category = dbsession.query(Category).filter_by(id=category_id).one()
     item = dbsession.query(Item).filter_by(id=item_id).one()
 
-    if not is_loggedin():
+    if not is_loggedin() and USING_AUTH:
         flash(MSG_NOT_AUTHORIZED.format('update the item'))
         return redirect('/')
 

@@ -5,6 +5,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
+from sqlalchemy.pool import StaticPool
 
 from flask import url_for
 
@@ -50,5 +51,5 @@ class Item(Base):
 # If this script is called,
 # it will create de database and table structures
 if __name__ == '__main__':
-    engine = create_engine(settings.DATABASE)
+    engine = create_engine(settings.DATABASE, poolclass=StaticPool)
     Base.metadata.create_all(engine)
